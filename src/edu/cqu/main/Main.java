@@ -4,6 +4,7 @@ import edu.cqu.core.FinishedListener;
 import edu.cqu.core.ProgressChangedListener;
 import edu.cqu.core.Solver;
 import edu.cqu.result.Result;
+import edu.cqu.result.ResultAls;
 import edu.cqu.result.ResultCycle;
 import edu.cqu.utils.FileUtils;
 
@@ -34,15 +35,21 @@ public class Main {
             solver.solve(algoConfigurePath, algoName, problemPath, new FinishedListener() {
                 @Override
                 public void onFinished(Result result) {
-                    ResultCycle resultCycle = (ResultCycle) result;
+                    ResultAls resultCycle = (ResultAls)result;
                     StringBuilder out = new StringBuilder();
+                    StringBuilder outBest = new StringBuilder();
                     double[] costCycle = resultCycle.costInCycle;
-
+                    double[] bestCostCycle = resultCycle.bestCostInCycle;
                     for (int i = 0; i < costCycle.length; ++i) {
                         System.out.println("cycle: " + i + ", cost: " + costCycle[i] / 2.0);
                         out.append(costCycle[i]+"\n");
                     }
-                    FileUtils.writeStringToFile(out.toString(),solutionPath + "" + algoName +"/cost.txt");
+                    for (int i = 0; i < bestCostCycle.length; ++i) {
+                        System.out.println("cycle: " + i + ", bestCost: " + bestCostCycle[i] / 2.0);
+                        outBest.append(bestCostCycle[i]+"\n");
+                    }
+                    FileUtils.writeStringToFile(out.toString(),solutionPath + "/" + algoName +"/cost.txt");
+                    FileUtils.writeStringToFile(outBest.toString(),solutionPath + "/" + algoName +"/bestCost.txt");
                 }
             }, false, false);
         }
